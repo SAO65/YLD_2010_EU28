@@ -1,91 +1,111 @@
-Expansion of morbidity, the financial crisis and the sustainability of health expenditure in the European Union. A reproducible analysis
-================================================================
+Diverging health expectancy and growing health expenditure in the European Union: a sustainable trend? A reproducible analysis in R knitr literate programming
+==========================================================================================
 
-### Stefano Olgiati, Niccolò Marchionni, Marco Scatigna, Emilio Clementi, Alessandro Danovi, Paolo Rossetti, Roberto Weinstein, Giancarlo Cesana
+### Stefano Olgiati (1), Niccolò Marchionni (2), Marco Scatigna (3), Emilio Clementi (4), Alessandro Danovi (5), Paolo Rossetti (6), Roberto Weinstein (7), Giancarlo Cesana (8)
 
-### Abstract
+1.  Author Responsible For Correspondence: University of Bergamo <www.unibg.it>, Department of Quantitative Methods, via dei Caniana 2, Bergamo (ITA) 24129; phone  +39 035 20 52 638; fax +39 035 20 52 549; email <stefano.olgiati@unibg.it>
+2. University of Florence, Department of Experimental and Clinical Medicine, Research Unit of Medicine of Aging, Firenze (ITA) 50121
+3. University of Milano, School of Specialty in Medical Pharmacology, Milano (ITA) 20100 
+4. University of Milano, Department of Biomedical and Clinical Sciences “L. Sacco”, Milano (ITA) 20100
+5. University of Bergamo, Department of Economics, Bergamo (ITA) 24129
+6. University of  Italian Switzerland, Department of Informatics, Lugano (CH) 6900
+7. University of Milano, Department of Biomedical and Clinical Sciences, Milano (ITA) 20100
+8. University of Milano Bicocca, Department of Statistics and Quantitative Methods, Monza (ITA) 20900
+
+
+### ABSTRACT
 **Background**
-The Global Burden of Disease study 2010 has revealed that 28 countries of the European Union are characterized by an uneven distribution of both Health Adjusted Life Expectancy and the number of Years Lived  for both sexes. In this paper we have tested the null hypothesis that, across the European Union, the is no correlation between per capita health expenditure and the distribution of the number of Years Lived with Disease.
+The European Union is characterised by overall improving life expectancy at birth in the period 1970-2009, with some socioeconomic inequalities remaining unsolved and affecting the equal distribution of health outcomes, in particular in eastern Europe. Following the *incipit* of the 2008 financial crisis some concerns have arisen regarding the effects of an enduring crisis on public health in some distressed countries like Italy, Greece and Portugal. 
 
-**Methods**
-We have utilized the Global Burden of Disease Study 2010 and the WHO Global Health Expenditure Statistics Repository open access datasets and we have conducted our statistical analysis with R knitr open source software and made our code available to other researchers
+**Research Goal**
+In this paper we have tested the hypothesis that, across the European Union in 2010, health adjusted life expectancy diverges and per capita health expenditure increases and is correlated to the number of years lived with disease.
+
+**Methods and Reproducibility**
+This research is completely repoducible. No human manual intervention has occurred in the downloading, processing and analysis of the Global Burden of Disease 2010 and WHO 2010 datasets. All bibliography is automatically generated and DOI referenced.
 
 **Findings**
-Our findings are consistent with the expansion of morbidity hypothesis: the number of Years Lived with Disability grows linearly with Life Expectancy (slope 0.24; 95% CI 0.17-0.30; R2=0.69), and the log of Total Health Expenditure grows linearly with the number of Years Lived with Disability (slope 0.56; 95% CI 0.38-0.73; R2=0.62).
+We found evidence in support of the divergence of health and socioeconomic status and the diminishing returns of health expenditure hypothesis in the European Union in 2010. We also found evidence in support of the expansion of morbidity and growing health expenditure hypothesis.
 
 **Interpretation**
-We conclude that health expenditure is correlated to the number of years lived with disability (p<0.001). Our interpretation is that, in the European Union, as overall life expectancy at birth for both sexes increases, preventing higher incidence, duration and severity of disease must become a priority in order to stabilize health expenditure growth and achieve a sustainable public health policy.
+In the European Union healthy life expectancy is diverging and at a growing cost. A public health policy aimed at preventing disease accross the Union rather than treating it could have a positive impact on the sustainability of health spendig.
+ 
 
-**Keywords**
-Years Lived With Disability, Total Health Expenditure Per Capita, Disease Prevention, Sustainable European Public Health Policy
-
-```{r echo=FALSE}
+```{r echo=FALSE, results='hide'}
 library(RCurl) 
 library(foreign)
 library(lattice)
 library(data.table)
 library(xtable)
 library(knitcitations)
+library(ggplot2)
+library(MASS)
 ```
 
-### INTRODUCTION
-The European Union is in general characterised by constantly improving life expectancy at birth in the period 1970-2009 `r citep("10.1093/ije/dyr061")` [See Figure 1 in (Leon 2011)] ("http://ije.oxfordjournals.org/content/40/2/271/F1.expansion.html") with some socioeconomic inequalities remaining unsolved and affecting the equal distribution of health outcomes `r citep("10.1056/NEJMsa0707519")`. 
+### 1. BACKGROUND
+The European Union is characterised by overall improving life expectancy at birth in the period 1970-2009 `r citep("10.1093/ije/dyr061")` [See Figure 1] ("http://ije.oxfordjournals.org/content/40/2/271/F1.expansion.html") with some socioeconomic inequalities remaining unsolved and affecting the equal distribution of health outcomes `r citep("10.1056/NEJMsa0707519")` in particular in eastern Europe `r citep(c("10.2307/3246630", "10.1017/S106279870999010X"))`. These findings have been confirmed by the Global Burden of Disease study 2010 `r citep("10.1016/S0140-6736(12)61729-2")`.
 
-After 2007-8, following the *incipit* of the financial crisis, Karanikolos et al. in 2013 `r citep("10.1016/S0140-6736(13)60102-6")` have risen some concerns regarding the effects of an enduring crisis on public health in some countries like Italy, Greece and Portugal.
+Following the *incipit* of the 2008 financial crisis, Karanikolos et al. in 2013 `r citep("10.1016/S0140-6736(13)60102-6")` have risen some concerns regarding the effects of an enduring crisis on public health in some distressed countries like Italy, Greece and Portugal.
 
-These concerns, coupled by a growing consensus of the risk, banking and finance academic community on the financial safety of the financial system itself [See IRMC 2014]("http://www.irmc.eu"), have led the authors of this paper to analyse the relationship between life expectancy, the burden of disease in terms of the number of years lived with disability, and per capita total health expenditure accross the European Union in the year 2010.
+In this paper we have tested the hypothesis that, across the European Union in 2010, health adjusted life expectancy diverges and per capita health expenditure increases and is correlated to the number of years lived with disease.
 
-### LITERATURE
-In literature the assessment of the relationship between health expenditure and life expectancy has been much debated and is controversial. We have analysed two major hypotheses:
+If this hypothesis cannot be rejected, a public health policy aimed at preventing disease rather than treating it could have a positive impact on the sustainability of health spending in less developeded EU economies.
 
-*Hypothesis I) the convergence of health and socioeconomic status and the diminishing returns of health expenditure*;   
+The reproducible literate codes of this research are available at the public repository on [github.com/SAO65/YLD_2010_EU28]("https://github.com/SAO65/YLD_2010_EU28")
+
+### 2. LITERATURE
+In literature the relationship between health expenditure and life expectancy is grounded on two major hypotheses:
+
+*Hypothesis I) the convergence/divergence of health and socioeconomic status and the diminishing returns of health expenditure*;   
 *Hypothesis II) the expansion of morbidity hypothesis and the growth of health expenditure*.
 
 #### Hypothesis I) The convergence of health and socioeconomic status and the diminishing returns of health expenditure
-Social epidemiologists and economists have since long debated the relationship between life expectancy and socioeconomic status. The role of *distal* socioeconomic determinants of health such as gross domestic product per capita, health expenditure and health coverage was originally proposed by Preston in 1975 `r citep("10.2307/2173509")`, McMichael in 1999 `r citep("10.1093/oxfordjournals.aje.a009732")` and 2004 `r citep("10.1016/S0140-6736(04)15902-3")` and Deaton in 2003 `r citep("10.1257/002205103321544710")`. In general, if life expectancy is considered a sufficiently explanatory descriptor of health outcomes `r citep("10.1093/ije/dyr061")`, the hypothesis to be tested is if a growing health expenditure is correlated to a longer life expectancy and if this correlation is characterised or not by diminishing returns (Figure 1).
+Social epidemiologists and economists have since long debated the relationship between life expectancy and socioeconomic status. The role of *distal* socioeconomic determinants of health such as gross domestic product per capita, health expenditure and health coverage was originally proposed by Preston in 1975 `r citep("10.2307/2173509")`, McMichael in 1999 `r citep("10.1093/oxfordjournals.aje.a009732")` and 2004 `r citep("10.1016/S0140-6736(04)15902-3")` and Deaton in 2003 `r citep("10.1257/002205103321544710")`. In general, if life expectancy is considered a sufficiently explanatory descriptor of health outcomes `r citep("10.1093/ije/dyr061")`, the hypothesis to be tested is if a growing health expenditure is correlated to a longer life expectancy and if this correlation is characterised or not by diminishing returns (**Figure 1**).
 
-Figure 1
-```{r echo=FALSE}
+**Figure 1: Function of convergence of health and socioeconomic status and the diminishing returns of health expenditure**
+
+```{r echo=FALSE, fig.align='center'}
 f1 <- function(x){
         log(x)
 }
-curve(f1, from=1, to=8, main="Simulation of convergence of health and socioeconomic status \n and the diminishing returns of health expenditure", xlab="Log of per capita total health expenditure", ylab="Life expectancy at birth")
+curve(f1, from=1, to=8, main="Diminishing returns of health expenditure", xlab="Log of per capita total health expenditure", ylab="Life expectancy at birth")
 ``` 
 
 #### Hypothesis II) The expansion of morbidity hypothesis and the growth of health expenditure
-In alternative, increased health spending can be explained by the growth in the number of years lived with disability which, in turn, can be explained by the growth of overall life expectancy at birth (Figure 2).
+In alternative, increased health spending can be explained by the growth in the number of years lived with disability which, in turn, can be explained by the growth of overall life expectancy at birth (**Figure 2**).
 
 As Salomon and colleagues `r citep("10.1016/S0140-6736(12)61690-0")` summarised in the Global Burden of Disease Study (February 2013 update) `r citep("10.1016/S0140-6736(12)61729-2")`, improving health: “means more than simply delaying death or increasing life expectancy at birth”, and “in the period 1990-2010 improvements in healthy life expectancy have mainly been achieved through reductions of child and adult mortality rates rather than reductions in non-fatal diseases, health risks and injuries”, which might imply survival, but with residual functional limitations and disabilities.
 
-Figure 2
-```{r echo=FALSE}
+**Figure 2: Function of Expansion of morbidity hypothesis and growth of health expenditure**
+```{r echo=FALSE, fig.align='center'}
 
 f2 <- function(x){
         x
 }
 
 par(mfrow=c(1,2))
-curve(f2, from=1, to=8, main="Expansion of morbidity hypothesis and...", xlab="Life Expectancy", ylab="Years Lived with Disability")
-curve(f2, from=1, to=8, main="... growth of health expenditure", xlab="Years Lived with Disability", ylab="Log of per capita total health expenditure")
+curve(f2, from=1, to=8, main="Expansion of morbidity", xlab="Life Expectancy", ylab="Years Lived with Disability")
+curve(f2, from=1, to=8, main="Growth of health expenditure", xlab="Years Lived with Disability", ylab="Log of per capita total health expenditure")
 ``` 
 
-### RESEARCH QUESTION
-We have reproduced the analysis under the assumptions of Hypothesis I and II for the European Union in the year 2010.
+### 3. RESEARCH GOAL
+We have reproduced the analysis under the assumptions of Hypothesis I and II for the European Union in the year 2010 in order to test the alternative hypotheses of health status convergence/divergence and expansion of morbidity, and their relationship with health expenditure.
 
-
-### CODE BOOK, METHODS AND RAW DATA
+### 4. CODE BOOK, METHODS AND RAW DATA
 We utilized open access data from the Institute for Health Metrics and Evaluation (IHME) Global Burden of Disease Study 2010 [GHDx]("http://ghdx.healthmetricsandevaluation.org/sites/default/files/record-attached-files/IHME_GBD_2010_HALE_BY_COUNTRY_1990_2010_Y2010M02D23.CSV") and from the World Health Organization’s [Data Repository on Health Expenditure]("http://apps.who.int/gho/athena/data/xmart.csv?target=GHO/WHS7_156,WHS7_105,WHS7_104,WHS7_108&profile=xmart&filter=COUNTRY:*;REGION:AFR;REGION:AMR;REGION:SEAR;REGION:EUR;REGION:EMR;REGION:WPR").
 
 #### Code Book
-The following variables and definitions, based on “The Global Burden of Disease: Generating Evidence, Guiding Policy” and the World Health Organization’s Data Repository on Health Expenditure, were adopted:
+The following variables and definitions, based on “The Global Burden of Disease: Generating Evidence, Guiding Policy” and the World Health Organization’s Data Repository on Health Expenditure, were adopted when extracting the tidy data set from the raw data:
 * Life Expectancy (LE): Life Expectancy at birth is the average number of years that a person can be expected to live from birth;
 * Healthy Life Expectancy (HALE): Healthy Life Expectancy is the average number of years that a person can be expected to live in “full health”, by taking into account years lived in less than full health with disease and/or non-fatal injury ;
 * Years Lived with Disability (YLD): The Years Lived with Disability is the difference between LE and HALE, where LE is always greater than or equal to HALE. It is equivalent to the number of years that people live with a health condition or its consequences or in less than full health with disease and/or non-fatal injury , .
-* Total Health Expenditure (THE): Total Health Expenditure includes public (government, external resources for health from international programs and social security) and private expenditure (private pre-paid plans and out-of-pocket). For the purpose of international comparisons, THE is expressed in International Purchase Power Parity United States Dollars (USD PPP) which, according to the World Bank, is the number of units of a country’s currency required to buy the same amounts of goods and services in the domestic market as one US Dollar would buy in the United States .
+* Total Health Expenditure (THE): Total Health Expenditure includes public (government, external resources for health from international programs and social security) and private expenditure (private pre-paid plans and out-of-pocket). For the purpose of international comparisons, THE is expressed in International Purchase Power Parity United States Dollars (USD PPP) which, according to the World Bank, is the number of units of a country’s currency required to buy the same amounts of goods and services in the domestic market as one US Dollar would buy in the United States;
+* Log of Total Health Expenditure (log.THE): the natural log of Total Health Expenditure (THE)
 
 #### Getting Data Code
 ```{r, cache=TRUE}
+# Getting raw data from the IHME Global Burden of Disease Study 2010
 fileURL.GBD <- "http://ghdx.healthmetricsandevaluation.org/sites/default/files/record-attached-files/IHME_GBD_2010_HALE_BY_COUNTRY_1990_2010_Y2010M02D23.CSV"
+# Getting raw data from the WHO Health Expenditure Repository
 fileURL.WHO <- "http://apps.who.int/gho/athena/data/xmart.csv?target=GHO/WHS7_156,WHS7_105,WHS7_104,WHS7_108&profile=xmart&filter=COUNTRY:*;REGION:AFR;REGION:AMR;REGION:SEAR;REGION:EUR;REGION:EMR;REGION:WPR"
 download.file(fileURL.GBD, destfile="/Users/Stefanoolgiati/Desktop/YLD/YLD.RPubs/YLD_2010_EU28/GBD.csv")
 download.file(fileURL.WHO, destfile="/Users/Stefanoolgiati/Desktop/YLD/YLD.RPubs/YLD_2010_EU28/WHO.csv")
@@ -93,15 +113,15 @@ dateDownloaded <- date()
 dateDownloaded
 ```
 
-#### Raw Data
-```{r, cache=TRUE, echo=FALSE}
+```{r, cache=TRUE, echo=FALSE, results='hide'}
+# Raw Data
 raw.data.GBD <- read.csv("/Users/Stefanoolgiati/Desktop/YLD/YLD.RPubs/YLD_2010_EU28/GBD.csv")
 raw.data.WHO <- read.csv("/Users/Stefanoolgiati/Desktop/YLD/YLD.RPubs/YLD_2010_EU28/WHO.csv")
 names(raw.data.GBD)
 ```
 
-#### Analytic Data
-```{r, echo=FALSE}
+```{r echo=FALSE, results='hide'}
+# Analytic Data
 attach(raw.data.GBD)
 attach(raw.data.WHO)
 
@@ -127,55 +147,88 @@ yld <- data$le - data$hale
 log.the <- log(data.WHO.ordered$Display)
 ```
 
-#### Tidy Dataset
-```{r}
+```{r echo=FALSE, results='hide'}
+# Tidy Dataset
 tidy.data <- data.frame(country=data.GBD.ordered$iso3, the=data.WHO.ordered$Display, log.the, le=data.GBD.ordered$le, hale=data.GBD.ordered$hale, yld)
 tidy.data
 attach(tidy.data)
 ```
 
+The tidy dataset in **Table 1** has been generated:
 
-#### Graphic Analysis Code
-```{r, echo=FALSE}
-plot(log.the, le, main="Convergence of Heath Status", xlab="Log of per capita total health expenditure", ylab="Life expectancy at birth")
-
-par(mfrow=c(1,2))
-plot(le, yld, main="Expansion of morbidity hypothesis", xlab="Life Expectancy", ylab="Years Lived with Disability")
-plot(log.the, yld, main="Growth of health expenditure", xlab="Years Lived with Disability", ylab="Log of per capita total health expenditure")
+**Table 1: Tidy dataset**
+```{r chunkData, echo=FALSE, results='asis'}
+table <- xtable(tidy.data)
+print(table, type = "html")
 ```
+**Source: GBDS 2010 and WHO**
 
 
-#### Analysis Code
-```{r echo=FALSE}
+### 5. FINDINGS
+We found evidence in support of the divergence of health and socioeconomic status and the diminishing returns of health expenditure hypothesis in the European Union in 2010 (**Figure 3**). 
+
+**Figure 3: Convergence of health and socioeconomic status and the diminishing returns of health expenditure in the European Union in 2010**
+```{r, fig.width=7, fig.height=6, echo=FALSE, fig.align='center'}
+# Graphic Analysis Code
+
+qplot(log.the, le, main="Convergence of Heath Status", xlab="Log of per capita total health expenditure", ylab="Life expectancy at birth", geom = c("point", "smooth"))
+```
+**Source: GBDS 2010 and WHO**
+
+We also found evidence in support of the expansion of morbidity (**Table 2**) and growing health expenditure (**Table 3**) hypothesis in the European Union in 2010 (**Figure 4**).
+
+**Figure 4: Expansion of morbidity hypothesis and growth of health expenditure in the European Union in 2010**
+```{r, fig.width=7, fig.height=6, echo=FALSE, fig.align='center'}
+par(mfrow=c(1,2))
+qplot(le, yld, main="Expansion of morbidity", xlab="Life Expectancy", ylab="Years Lived with Disability", geom = c("point", "smooth"), method="lm")
+qplot(log.the, yld, main="Growth of health expenditure", xlab="Years Lived with Disability", ylab="Log of per capita total health expenditure", geom = c("point", "smooth"), method="lm")
+```
+**Source: GBDS 2010 and WHO**
+
+```{r chunkTest, echo=FALSE, results='asis'}
+# Analysis Code
 lm.fit1 <- lm(yld~le)
 lm.fit2=lm(log.the~yld)
+
+s1 <- summary(lm.fit1)
+table.s1 <- xtable(s1)
+
+c1 <- confint(lm.fit1)
+table.c1 <- xtable(c1)
+
+s2 <- summary(lm.fit2)
+table.s2 <- xtable(s2)
+
+c2 <- confint(lm.fit2)
+table.c2 <- xtable(c2)
 ```
 
-
-### FINDINGS
-We found that, as YLD increases, an increasing share of economic resources is dedicated not only to reducing mortality, but also to reducing the incidence, duration and severity of diseases that cause morbidity, comorbidity and multimorbidity, but not mortality.  
-
-In 2010, across 28 Countries of the European Union, the log of per capita Total Health Expenditure is a linear function of the number of Years Lived with Disability ((slope 0.56; 95% CI 0.38-0.73; R2=0.62) (Exhibits 3 and 4). We have called this relationship Disability Costs Function.
-
-```{r}
-summary(lm.fit1)
-confint(lm.fit1)
-summary(lm.fit2)
-confint(lm.fit2)
+**Table 2: Expansion of morbidity hypothesis in the European Union in 2010**
+```{r table 1, echo=FALSE, results='asis', fig.align='center'}
+print(table.s1, type = "html")
+print(table.c1, type = "html")
 ```
+**Source: GBDS 2010 and WHO**
 
-In general, this epidemiological relationship is true for almost all high- and middle-income European countries . The Institute for Health Metrics and Evaluation (IHME) Global Burden of Disease Study 2010 (2013 update) has found evidence in favour of the expansion of morbidity hypothesis  `r citep("10.1001/jama.2013.13805")`. Exhibit 2 shows that in 2010, in the 28 EU countries, the increase in life expectancy at birth is accompanied by a linear increase in the number of years lived with disability ((slope 0.24; 95% CI 0.17-0.30; R2=0.69), with 2.9 months of healthy life lost for each additional year of life lived .
+**Table 3: Growth of health expenditure in the European Union in 2010**
+```{r table 2, echo=FALSE, results='asis', fig.align='center'}
+print(table.s1, type = "html")
+print(table.c1, type = "html")
+```
+**Source: GBDS 2010 and WHO**
 
-Given this correlation between life expectancy at birth and the number of years lived with disability, our research question is whether total health expenditure per capita (THE) is a function of the number of years lived with such disability (YLD), defined as the difference between life expectancy (LE) and health-adjusted life expectancy (HALE) and, if so, what shape this distribution has.
+In synthesis, we found that in 2010, across 28 Countries of the European Union, the number of Years Lived with Disease is a linear functon of Life Expectancy and the log of per capita Total Health Expenditure is a linear function of the number of Years Lived with Disability. We have called this relationship Disability Costs Function.
 
+In general, this epidemiological relationship is true for almost all high- and middle-income European countries . The Institute for Health Metrics and Evaluation (IHME) Global Burden of Disease Study 2010 (2013 update) has found evidence in favour of the global expansion of morbidity hypothesis `r citep("10.1001/jama.2013.13805")`. 
+
+### 6. INTERPRETATION
 These results confirm the findings in the US by Murray et al. `r citep("10.1056/NEJMra1201534")`  in the United States who concluded that “the US [...] made notable progress in improving health in the two decades from 1990 to 2010” but “in a marked shift, non-fatal disease and disability accounted for almost half of all health burden in the US in 2010”.
 
-### CONCLUSIONS
 In Greek mythology Sisyphus was the symbol of futile labour  condemned to push a boulder up a hill only to watch it roll back down, and repeat this action forever . European public health policymakers might be heading towards the same fate: while there is an improvement in socioeconomic distal determinants of health (such as per capita Gross Domestic Product , living standards and education, accessibility to health services  and medical practices  with reduced inequalities and crime rates), and life expectancy at birth in all 28 EU countries continues to rise, at the same time the number of years lived with disease, non-fatal injury and disability also increases , requiring policymakers to invest more and more economic resources in health care. 
 
 The implications of the Disability Costs Function are not trivial:
 
-a) Comparing among different countries, the efficiency of health spending is significant only vertically along the Disability Costs Function, and effectiveness is significant only horizontally. For example, Sweden (YLD 11.75: THE 3,759 ) is more efficient than Luxembourg (YLD 11.74; THE 6,711), less effective than Ireland (YLD 11.06; THE 3,719), and less efficient and less effective than the United Kingdom (YLD 11.28; THE 3,433);
+a) Comparing among different countries, the efficiency of health spending is significant only vertically along the Disability Costs Function, and effectiveness is significant only horizontally;
 
 b) If adequate public health policies aimed at preventing non-fatal disease and injury are not adopted , countries with lower life expectancy at birth, lower number of years lived with disability and lower per capita total health expenditure, like Bulgaria, Romania, Lithuania, Latvia, Estonia, Poland, Hungary, Czech Republic and Slovakia will face exponential growth in disability and health expenditure as life expectancy at birth improves;
 
@@ -187,8 +240,10 @@ We conclude that the value of a sustainable public health policy should also be 
 
 In the absence of these goals, political economy and health economic policies will deliver more wealth per capita and a longer life, but also, at the same time, more years of disease - and at a higher cost.
 
-  
-### REFERENCES  
+### 7. DISCUSSION AND LIMITS
+The East-West health gap in the European Union is a well known object of scientific research `r citep(c("10.1093/eurpub/ckm006"), "10.1093/ije/26.1.75")` and life expectancy is an outcome indicator with many limitations `r citep(c("10.1126/science.1069675"))`. The purpose of this paper is not to propose a novel interpretation of well known trends and facts, but to assess the reproducibility of the main hypotheses underlyng the growth of health expenditure for public health and public health policy purposes.
+
+### 8. REFERENCES  
 ```{r echo=FALSE}
 bibliography()
 ``` 
