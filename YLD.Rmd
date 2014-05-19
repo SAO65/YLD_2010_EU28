@@ -27,7 +27,7 @@ This research is completely repoducible. No human manual intervention has occurr
 We found evidence in support of the divergence of health and socioeconomic status and the diminishing returns of health expenditure hypothesis in the European Union in 2010. We also found evidence in support of the expansion of morbidity and growing health expenditure hypothesis.
 
 **Interpretation**
-In the European Union healthy life expectancy is diverging and at a growing cost. A public health policy aimed at preventing disease accross the Union rather than treating it could have a positive impact on the sustainability of health spendig.
+In the European Union healthy life expectancy is diverging and at a growing cost. A public health policy aimed at preventing disease accross the Union rather than treating it could have a positive impact on the sustainability of health spending.
  
 
 ```{r echo=FALSE, results='hide'}
@@ -120,6 +120,7 @@ raw.data.WHO <- read.csv("/Users/Stefanoolgiati/Desktop/YLD/YLD.RPubs/YLD_2010_E
 names(raw.data.GBD)
 ```
 
+### Analytic Data
 ```{r echo=FALSE, results='hide'}
 # Analytic Data
 attach(raw.data.GBD)
@@ -129,8 +130,10 @@ DT.GBD <- data.table(raw.data.GBD)
 DT.WHO <- data.table(raw.data.WHO)
 
 tables()
+```
 
-# ISO 13 codes of 28 Countries of the EU for which complete datasets were available
+#### ISO 13 codes of 28 Countries of the EU for which complete datasets were available
+```{r}
 EU28 <- c("AUT","BEL","BGR","HRV","CYP","CZE","DNK","EST","FIN","FRA","DEU","GRC","HUN","IRL","ITA","LVA","LTU","LUX","MLT","NLD","POL","PRT","ROU","SVK","SVN","ESP","SWE","GBR")
 length(EU28) == 28
 
@@ -145,12 +148,9 @@ data <- data.frame(country=data.GBD.ordered$iso3, le=data.GBD.ordered$le, hale=d
 yld <- data$le - data$hale
 
 log.the <- log(data.WHO.ordered$Display)
-```
 
-```{r echo=FALSE, results='hide'}
 # Tidy Dataset
 tidy.data <- data.frame(country=data.GBD.ordered$iso3, the=data.WHO.ordered$Display, log.the, le=data.GBD.ordered$le, hale=data.GBD.ordered$hale, yld)
-tidy.data
 attach(tidy.data)
 ```
 
@@ -185,11 +185,13 @@ qplot(log.the, yld, main="Growth of health expenditure", xlab="Years Lived with 
 ```
 **Source: GBDS 2010 and WHO**
 
-```{r chunkTest, echo=FALSE, results='asis'}
+```{r}
 # Analysis Code
 lm.fit1 <- lm(yld~le)
 lm.fit2=lm(log.the~yld)
+```
 
+```{r chunkTest, echo=FALSE, results='asis'}
 s1 <- summary(lm.fit1)
 table.s1 <- xtable(s1)
 
@@ -209,11 +211,13 @@ print(table.s1, type = "html")
 print(table.c1, type = "html")
 ```
 **Source: GBDS 2010 and WHO**
-
+  
+  
+  
 **Table 3: Growth of health expenditure in the European Union in 2010**
 ```{r table 2, echo=FALSE, results='asis', fig.align='center'}
-print(table.s1, type = "html")
-print(table.c1, type = "html")
+print(table.s2, type = "html")
+print(table.c2, type = "html")
 ```
 **Source: GBDS 2010 and WHO**
 

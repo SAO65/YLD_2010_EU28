@@ -27,7 +27,7 @@ This research is completely repoducible. No human manual intervention has occurr
 We found evidence in support of the divergence of health and socioeconomic status and the diminishing returns of health expenditure hypothesis in the European Union in 2010. We also found evidence in support of the expansion of morbidity and growing health expenditure hypothesis.
 
 **Interpretation**
-In the European Union healthy life expectancy is diverging and at a growing cost. A public health policy aimed at preventing disease accross the Union rather than treating it could have a positive impact on the sustainability of health spendig.
+In the European Union healthy life expectancy is diverging and at a growing cost. A public health policy aimed at preventing disease accross the Union rather than treating it could have a positive impact on the sustainability of health spending.
  
 
 
@@ -112,17 +112,61 @@ dateDownloaded
 
 
 
+### Analytic Data
 
 
 
+#### ISO 13 codes of 28 Countries of the EU for which complete datasets were available
 
+```r
+EU28 <- c("AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", 
+    "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD", "POL", 
+    "PRT", "ROU", "SVK", "SVN", "ESP", "SWE", "GBR")
+length(EU28) == 28
+```
+
+```
+## [1] TRUE
+```
+
+```r
+
+data.GBD <- DT.GBD[DT.GBD$year == "2010" & DT.GBD$age_name == "0-1 years" & 
+    DT.GBD$sex_name == "Both" & DT.GBD$iso3 %in% EU28, ]
+data.GBD.ordered <- data.GBD[order(iso3), ]
+
+data.WHO <- DT.WHO[DT.WHO$YEAR == "2010" & DT.WHO$GHO == "WHS7_104" & DT.WHO$COUNTRY %in% 
+    EU28, ]
+data.WHO.ordered <- data.WHO[order(COUNTRY), ]
+
+data <- data.frame(country = data.GBD.ordered$iso3, le = data.GBD.ordered$le, 
+    hale = data.GBD.ordered$hale, the = data.WHO.ordered$Display)
+
+yld <- data$le - data$hale
+
+log.the <- log(data.WHO.ordered$Display)
+
+# Tidy Dataset
+tidy.data <- data.frame(country = data.GBD.ordered$iso3, the = data.WHO.ordered$Display, 
+    log.the, le = data.GBD.ordered$le, hale = data.GBD.ordered$hale, yld)
+attach(tidy.data)
+```
+
+```
+## The following objects are masked _by_ .GlobalEnv:
+## 
+##     log.the, yld
+## The following objects are masked from raw.data.GBD:
+## 
+##     hale, le
+```
 
 
 The tidy dataset in **Table 1** has been generated:
 
 **Table 1: Tidy dataset**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun May 18 12:50:53 2014 -->
+<!-- Mon May 19 09:18:34 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> country </TH> <TH> the </TH> <TH> log.the </TH> <TH> le </TH> <TH> hale </TH> <TH> yld </TH>  </TR>
   <TR> <TD align="right"> 1 </TD> <TD> AUT </TD> <TD align="right"> 3937.10 </TD> <TD align="right"> 8.28 </TD> <TD align="right"> 80.61 </TD> <TD align="right"> 69.13 </TD> <TD align="right"> 11.48 </TD> </TR>
@@ -179,18 +223,26 @@ We also found evidence in support of the expansion of morbidity (**Table 2**) an
 **Source: GBDS 2010 and WHO**
 
 
+```r
+# Analysis Code
+lm.fit1 <- lm(yld ~ le)
+lm.fit2 = lm(log.the ~ yld)
+```
+
+
+
 
 
 **Table 2: Expansion of morbidity hypothesis in the European Union in 2010**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun May 18 12:50:54 2014 -->
+<!-- Mon May 19 09:18:35 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Estimate </TH> <TH> Std. Error </TH> <TH> t value </TH> <TH> Pr(&gt;|t|) </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -7.8397 </TD> <TD align="right"> 2.4456 </TD> <TD align="right"> -3.21 </TD> <TD align="right"> 0.0036 </TD> </TR>
   <TR> <TD align="right"> le </TD> <TD align="right"> 0.2385 </TD> <TD align="right"> 0.0312 </TD> <TD align="right"> 7.65 </TD> <TD align="right"> 0.0000 </TD> </TR>
    </TABLE>
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun May 18 12:50:54 2014 -->
+<!-- Mon May 19 09:18:35 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> 2.5 % </TH> <TH> 97.5 % </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -12.87 </TD> <TD align="right"> -2.81 </TD> </TR>
@@ -198,21 +250,23 @@ We also found evidence in support of the expansion of morbidity (**Table 2**) an
    </TABLE>
 
 **Source: GBDS 2010 and WHO**
-
+  
+  
+  
 **Table 3: Growth of health expenditure in the European Union in 2010**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun May 18 12:50:54 2014 -->
+<!-- Mon May 19 09:18:35 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Estimate </TH> <TH> Std. Error </TH> <TH> t value </TH> <TH> Pr(&gt;|t|) </TH>  </TR>
-  <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -7.8397 </TD> <TD align="right"> 2.4456 </TD> <TD align="right"> -3.21 </TD> <TD align="right"> 0.0036 </TD> </TR>
-  <TR> <TD align="right"> le </TD> <TD align="right"> 0.2385 </TD> <TD align="right"> 0.0312 </TD> <TD align="right"> 7.65 </TD> <TD align="right"> 0.0000 </TD> </TR>
+  <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -2.6602 </TD> <TD align="right"> 1.5045 </TD> <TD align="right"> -1.77 </TD> <TD align="right"> 0.0888 </TD> </TR>
+  <TR> <TD align="right"> yld </TD> <TD align="right"> 0.9232 </TD> <TD align="right"> 0.1382 </TD> <TD align="right"> 6.68 </TD> <TD align="right"> 0.0000 </TD> </TR>
    </TABLE>
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun May 18 12:50:54 2014 -->
+<!-- Mon May 19 09:18:35 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> 2.5 % </TH> <TH> 97.5 % </TH>  </TR>
-  <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -12.87 </TD> <TD align="right"> -2.81 </TD> </TR>
-  <TR> <TD align="right"> le </TD> <TD align="right"> 0.17 </TD> <TD align="right"> 0.30 </TD> </TR>
+  <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -5.75 </TD> <TD align="right"> 0.43 </TD> </TR>
+  <TR> <TD align="right"> yld </TD> <TD align="right"> 0.64 </TD> <TD align="right"> 1.21 </TD> </TR>
    </TABLE>
 
 **Source: GBDS 2010 and WHO**
