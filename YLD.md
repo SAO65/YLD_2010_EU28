@@ -166,7 +166,7 @@ The tidy dataset in **Table 1** has been generated:
 
 **Table 1: Tidy dataset**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon May 19 09:18:34 2014 -->
+<!-- Mon May 19 09:34:03 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> country </TH> <TH> the </TH> <TH> log.the </TH> <TH> le </TH> <TH> hale </TH> <TH> yld </TH>  </TR>
   <TR> <TD align="right"> 1 </TD> <TD> AUT </TD> <TD align="right"> 3937.10 </TD> <TD align="right"> 8.28 </TD> <TD align="right"> 80.61 </TD> <TD align="right"> 69.13 </TD> <TD align="right"> 11.48 </TD> </TR>
@@ -235,14 +235,14 @@ lm.fit2 = lm(log.the ~ yld)
 
 **Table 2: Expansion of morbidity hypothesis in the European Union in 2010**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon May 19 09:18:35 2014 -->
+<!-- Mon May 19 09:34:04 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Estimate </TH> <TH> Std. Error </TH> <TH> t value </TH> <TH> Pr(&gt;|t|) </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -7.8397 </TD> <TD align="right"> 2.4456 </TD> <TD align="right"> -3.21 </TD> <TD align="right"> 0.0036 </TD> </TR>
   <TR> <TD align="right"> le </TD> <TD align="right"> 0.2385 </TD> <TD align="right"> 0.0312 </TD> <TD align="right"> 7.65 </TD> <TD align="right"> 0.0000 </TD> </TR>
    </TABLE>
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon May 19 09:18:35 2014 -->
+<!-- Mon May 19 09:34:04 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> 2.5 % </TH> <TH> 97.5 % </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -12.87 </TD> <TD align="right"> -2.81 </TD> </TR>
@@ -255,14 +255,14 @@ lm.fit2 = lm(log.the ~ yld)
   
 **Table 3: Growth of health expenditure in the European Union in 2010**
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon May 19 09:18:35 2014 -->
+<!-- Mon May 19 09:34:04 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Estimate </TH> <TH> Std. Error </TH> <TH> t value </TH> <TH> Pr(&gt;|t|) </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -2.6602 </TD> <TD align="right"> 1.5045 </TD> <TD align="right"> -1.77 </TD> <TD align="right"> 0.0888 </TD> </TR>
   <TR> <TD align="right"> yld </TD> <TD align="right"> 0.9232 </TD> <TD align="right"> 0.1382 </TD> <TD align="right"> 6.68 </TD> <TD align="right"> 0.0000 </TD> </TR>
    </TABLE>
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon May 19 09:18:35 2014 -->
+<!-- Mon May 19 09:34:04 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> 2.5 % </TH> <TH> 97.5 % </TH>  </TR>
   <TR> <TD align="right"> (Intercept) </TD> <TD align="right"> -5.75 </TD> <TD align="right"> 0.43 </TD> </TR>
